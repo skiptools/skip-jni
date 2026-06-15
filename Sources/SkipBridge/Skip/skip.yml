@@ -67,7 +67,7 @@ build:
             - 'workingDir(layout.projectDirectory)'
 
             # invoke the Android build
-            - 'commandLine("sh", "-cx", "\"${skipcmd}\" android build -d \"${swiftBuildFolder()}/jni-libs\" --package-path \"${swiftSourceFolder()}\" --configuration ${mode} --product ${project.name} --scratch-path \"${swiftBuildFolder()}/swift\" --arch automatic --build-system native -Xcc -fPIC -Xswiftc -DSKIP_BRIDGE -Xswiftc -DTARGET_OS_ANDROID -Xswiftc -Xfrontend -Xswiftc -no-clang-module-breadcrumbs -Xswiftc -Xfrontend -Xswiftc -module-cache-path -Xswiftc -Xfrontend -Xswiftc \"${swiftBuildFolder()}/swift/module-cache/${project.name}\"")'
+            - 'commandLine("sh", "-cx", "\"${skipcmd}\" android build -d \"${swiftBuildFolder()}/jni-libs\" --package-path \"${swiftSourceFolder()}\" --configuration ${mode} --product ${project.name} --scratch-path \"${swiftBuildFolder()}/swift\" --arch automatic -Xcc -fPIC -Xswiftc -DSKIP_BRIDGE -Xswiftc -DTARGET_OS_ANDROID -Xswiftc -Xfrontend -Xswiftc -no-clang-module-breadcrumbs -Xswiftc -Xfrontend -Xswiftc -module-cache-path -Xswiftc -Xfrontend -Xswiftc \"${swiftBuildFolder()}/swift/module-cache/${project.name}\"")'
 
             - 'environment("SKIP_BRIDGE", "1")'
             - 'environment("TARGET_OS_ANDROID", "1")'
