@@ -1,6 +1,9 @@
 // Copyright 2024–2026 Skip
 // SPDX-License-Identifier: MPL-2.0
 import SwiftJNI
+#if canImport(SwiftJavaJNICore)
+import SwiftJavaJNICore
+#endif
 
 /// A Swift object that is backed by a Java closure in the form of a `kotlin.jvm.functions.FunctionN` object.
 public final class JavaBackedClosure<R>: JObject, @unchecked Sendable {
@@ -10,6 +13,13 @@ public final class JavaBackedClosure<R>: JObject, @unchecked Sendable {
         self.options = options
         super.init(ptr)
     }
+
+    #if canImport(SwiftJavaJNICore)
+    public required init(fromJNI value: JavaObjectPointer?, in environment: JNIEnvironment) {
+        self.options = []
+        super.init(JNI.jni.newGlobalRef(value!)!)
+    }
+    #endif
 
     public func invoke() throws -> R {
         return try jniContext {

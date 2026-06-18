@@ -12,9 +12,20 @@ permissions:
   contents: write
 
 jobs:
-  call-workflow:
+  skip-bridge-skip-jni:
     uses: skiptools/actions/.github/workflows/skip-framework.yml@v1
     with:
+      runs-on: "['macos-15-intel', 'ubuntu-24.04']"
+      swift-android-sdk-version: "['', 'nightly-main']"
+      # disable export because there are currently problems with shared PCH module cache files with multi-module native export
+      run-export: false
+
+  # build against the variant that uses SWIFT_JAVA_JNI_CORE to
+  # switch swift-jni to instead use swiftlang/swift-java-jni-core
+  skip-bridge-swiftlang-jni:
+    uses: skiptools/actions/.github/workflows/skip-framework.yml@v1
+    with:
+      env: SWIFT_JAVA_JNI_CORE=1
       runs-on: "['macos-15-intel', 'ubuntu-24.04']"
       swift-android-sdk-version: "['', 'nightly-main']"
       # disable export because there are currently problems with shared PCH module cache files with multi-module native export
