@@ -11,6 +11,17 @@ public final class JavaBackedClosure<R>: JObject, @unchecked Sendable {
         super.init(ptr)
     }
 
+    #if SWIFT_JAVA_JNI_CORE
+    // Required because, with the swift-java-jni-core substrate, JObject conforms to JavaValue (which
+    // mandates init(fromJNI:in:)). A JavaBackedClosure is never actually constructed via this path,
+    // so the options default to []. JNIEnvPointer is JObject's required-init env type
+    // (UnsafeMutablePointer<JNIEnv?>, the same underlying type as swift-java-jni-core's JNIEnvironment).
+    public required init(fromJNI value: JavaObjectPointer?, in environment: JNIEnvPointer) {
+        self.options = []
+        super.init(fromJNI: value, in: environment)
+    }
+    #endif
+
     public func invoke() throws -> R {
         return try jniContext {
             let object: JavaObjectPointer? = try call(method: Java_Function0_invoke_methodID, options: options, args: [])
