@@ -23,7 +23,18 @@ class Reflector {
     }
 
     constructor(reflectingClassName: String, arguments: List<Any?>?) {
-        val cls = Class.forName(reflectingClassName).kotlin
+        val javaCls = Class.forName(reflectingClassName)
+        // Fast path: a public zero-arg constructor needs no kotlin-reflect signature matching,
+        // which pays the full reflection-infrastructure init on its first use in the process
+        if (arguments.isNullOrEmpty()) {
+            val javaConstructor = javaCls.constructors.firstOrNull { it.parameterCount == 0 }
+            if (javaConstructor != null) {
+                this.obj = javaConstructor.newInstance()!!
+                this.cls = null
+                return
+            }
+        }
+        val cls = javaCls.kotlin
         val match = matchConstructor(cls, arguments ?: listOf<Any?>())
         if (match == null) {
             throw NoSuchMethodError("${reflectingClassName}.<init>(${argumentsString(arguments)})")
@@ -181,6 +192,12 @@ class Reflector {
 
     private fun propertyValue(name: String): Any? {
         if (obj != null) {
+            // Fast path: resolve the property's Java getter directly before scanning
+            // kotlin-reflect memberProperties, which pays the full reflection-infrastructure
+            // init on its first use in the process. Non-public Kotlin members are excluded
+            // by their module-mangled JVM getter names, and Java fields (which kotlin-reflect
+            // surfaces as properties) have no getter, so both fall through to the slow path.
+            javaGetter(obj.javaClass, name)?.let { return it.invoke(obj) }
             val property = obj::class.memberProperties.firstOrNull { it.name == name }
             if (property != null && property.visibility == KVisibility.PUBLIC) {
                 return (property as KProperty1<Any, *>).get(obj)
@@ -282,6 +299,16 @@ class Reflector {
     }
 
     companion object {
+        private fun javaGetter(cls: Class<*>, name: String): java.lang.reflect.Method? {
+            val isBooleanStyle = name.length > 2 && name.startsWith("is") && name[2].isUpperCase()
+            val getterName = if (isBooleanStyle) name else "get" + name.replaceFirstChar { it.uppercaseChar() }
+            return try {
+                cls.getMethod(getterName).takeIf { it.parameterCount == 0 }
+            } catch (e: NoSuchMethodException) {
+                null
+            }
+        }
+
         private fun matchConstructor(cls: KClass<*>, arguments: Any): Pair<KFunction<*>, Map<KParameter, Any?>>? {
             val scored = cls.constructors.mapNotNull {
                 val scoredArguments: Pair<Double, List<Pair<Any?, KParameter>>>?
