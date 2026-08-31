@@ -612,20 +612,19 @@ final class BridgeToKotlinTests: XCTestCase {
         XCTAssertNil(r4)
     }
 
-    // TODO: setting async throws closures does not work
-//    public func testAsyncClosure1ThrowsVar() async throws {
-//        let r1 = try await swiftAsyncClosure1ThrowsVar("abc")
-//        XCTAssertEqual(r1, 3)
-//        swiftAsyncClosure1ThrowsVar = { s in
-//            throw SwiftError()
-//        }
-//        do {
-//            let _ = try await swiftAsyncClosure1ThrowsVar("abc")
-//            XCTFail("closure should have thrown an error")
-//        } catch {
-//            // expected
-//        }
-//    }
+    public func testAsyncClosure1ThrowsVar() async throws {
+        let r1 = try await swiftAsyncClosure1ThrowsVar("abc")
+        XCTAssertEqual(r1, 3)
+        swiftAsyncClosure1ThrowsVar = { s in
+            throw SwiftError()
+        }
+        do {
+            let _ = try await swiftAsyncClosure1ThrowsVar("abc")
+            XCTFail("closure should have thrown an error")
+        } catch {
+            // expected
+        }
+    }
 
     // FIXME: test hangs intermittently on Android
     public func XXXtestAsyncClosureNVar() async {

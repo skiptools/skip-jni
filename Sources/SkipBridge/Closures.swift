@@ -288,6 +288,7 @@ public final class SwiftClosure0 {
         return javaObject(for: { try assumeMainActorUnchecked(closure) }, options: options)
     }
 
+    @_disfavoredOverload
     public static func closure<R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable () -> R)? {
         guard let function else {
             return nil
@@ -356,6 +357,7 @@ public final class SwiftClosure1 {
         return javaObject(for: { p0 in try assumeMainActorUnchecked { try closure(p0) } }, options: options)
     }
 
+    @_disfavoredOverload
     public static func closure<P0, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable (P0) -> R)? {
         guard let function else {
             return nil
@@ -369,6 +371,7 @@ public final class SwiftClosure1 {
         }
     }
 
+    @_disfavoredOverload
     public static func closure<P0, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions, invokeJava: @escaping @Sendable (JavaBackedClosure<R>, P0) throws -> R) -> (@Sendable (P0) -> R)? {
         guard let function else {
             return nil
@@ -452,6 +455,7 @@ public final class SwiftClosure2 {
         return javaObject(for: { p0, p1 in try assumeMainActorUnchecked { try closure(p0, p1) } }, options: options)
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable (P0, P1) -> R)? {
         guard let function else {
             return nil
@@ -465,6 +469,7 @@ public final class SwiftClosure2 {
         }
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions, invokeJava: @escaping @Sendable (JavaBackedClosure<R>, P0, P1) throws -> R) -> (@Sendable (P0, P1) -> R)? {
         guard let function else {
             return nil
@@ -551,6 +556,7 @@ public final class SwiftClosure3 {
         return javaObject(for: { p0, p1, p2 in try assumeMainActorUnchecked { try closure(p0, p1, p2) } }, options: options)
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, P2, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable (P0, P1, P2) -> R)? {
         guard let function else {
             return nil
@@ -564,6 +570,7 @@ public final class SwiftClosure3 {
         }
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, P2, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions, invokeJava: @escaping @Sendable (JavaBackedClosure<R>, P0, P1, P2) throws -> R) -> (@Sendable (P0, P1, P2) -> R)? {
         guard let function else {
             return nil
@@ -653,6 +660,7 @@ public final class SwiftClosure4 {
         return javaObject(for: { p0, p1, p2, p3 in try assumeMainActorUnchecked { try closure(p0, p1, p2, p3) } }, options: options)
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, P2, P3, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable (P0, P1, P2, P3) -> R)? {
         guard let function else {
             return nil
@@ -666,6 +674,7 @@ public final class SwiftClosure4 {
         }
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, P2, P3, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions, invokeJava: @escaping @Sendable (JavaBackedClosure<R>, P0, P1, P2, P3) throws -> R) -> (@Sendable (P0, P1, P2, P3) -> R)? {
         guard let function else {
             return nil
@@ -758,6 +767,7 @@ public final class SwiftClosure5 {
         return javaObject(for: { p0, p1, p2, p3, p4 in try assumeMainActorUnchecked { try closure(p0, p1, p2, p3, p4) } }, options: options)
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, P2, P3, P4, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable (P0, P1, P2, P3, P4) -> R)? {
         guard let function else {
             return nil
@@ -771,6 +781,7 @@ public final class SwiftClosure5 {
         }
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, P2, P3, P4, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions, invokeJava: @escaping @Sendable (JavaBackedClosure<R>, P0, P1, P2, P3, P4) throws -> R) -> (@Sendable (P0, P1, P2, P3, P4) -> R)? {
         guard let function else {
             return nil
@@ -1065,8 +1076,10 @@ private func SwiftBackedSuspendFunction_invoke(_ closure: @escaping @isolated(an
                 try continuationWrapper.call(method: Java_SwiftContinuationWrapper_success_methodID, options: [], args: [return_java])
             }
         } catch {
-            let error_java = JThrowable.toThrowable(error, options: options).toJavaParameter(options: options)
-            try continuationWrapper.call(method: Java_SwiftContinuationWrapper_failure_methodID, options: [], args: [error_java])
+            try jniContext {
+                let error_java = JThrowable.toThrowable(error, options: options).toJavaParameter(options: options)
+                try continuationWrapper.call(method: Java_SwiftContinuationWrapper_failure_methodID, options: [], args: [error_java])
+            }
         }
     }
 }
@@ -1082,6 +1095,7 @@ public final class SwiftAsyncClosure0 {
         return try! Java_SwiftBackedSuspendFunction0_class.create(ctor: Java_SwiftBackedSuspendFunction0_constructor_methodID, options: options, args: [swiftPeerPtr.toJavaParameter(options: options)])
     }
 
+    @_disfavoredOverload
     public static func closure<R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable () async -> R)? {
         guard let function else {
             return nil
@@ -1143,6 +1157,7 @@ public final class SwiftAsyncClosure1 {
         return try! Java_SwiftBackedSuspendFunction1_class.create(ctor: Java_SwiftBackedSuspendFunction1_constructor_methodID, options: options, args: [swiftPeerPtr.toJavaParameter(options: options)])
     }
 
+    @_disfavoredOverload
     public static func closure<P0, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable (P0) async -> R)? {
         guard let function else {
             return nil
@@ -1206,6 +1221,7 @@ public final class SwiftAsyncClosure2 {
         return try! Java_SwiftBackedSuspendFunction2_class.create(ctor: Java_SwiftBackedSuspendFunction2_constructor_methodID, options: options, args: [swiftPeerPtr.toJavaParameter(options: options)])
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable (P0, P1) async -> R)? {
         guard let function else {
             return nil
@@ -1272,6 +1288,7 @@ public final class SwiftAsyncClosure3 {
         return try! Java_SwiftBackedSuspendFunction3_class.create(ctor: Java_SwiftBackedSuspendFunction3_constructor_methodID, options: options, args: [swiftPeerPtr.toJavaParameter(options: options)])
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, P2, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable (P0, P1, P2) async -> R)? {
         guard let function else {
             return nil
@@ -1341,6 +1358,7 @@ public final class SwiftAsyncClosure4 {
         return try! Java_SwiftBackedSuspendFunction4_class.create(ctor: Java_SwiftBackedSuspendFunction4_constructor_methodID, options: options, args: [swiftPeerPtr.toJavaParameter(options: options)])
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, P2, P3, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable (P0, P1, P2, P3) async -> R)? {
         guard let function else {
             return nil
@@ -1413,6 +1431,7 @@ public final class SwiftAsyncClosure5 {
         return try! Java_SwiftBackedSuspendFunction5_class.create(ctor: Java_SwiftBackedSuspendFunction5_constructor_methodID, options: options, args: [swiftPeerPtr.toJavaParameter(options: options)])
     }
 
+    @_disfavoredOverload
     public static func closure<P0, P1, P2, P3, P4, R>(forJavaObject function: JavaObjectPointer?, options: JConvertibleOptions) -> (@Sendable (P0, P1, P2, P3, P4) async -> R)? {
         guard let function else {
             return nil
