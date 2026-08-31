@@ -403,8 +403,7 @@ public var swiftAsyncClosure3Var: (Int64, Int32, Int16) async -> Double = { Doub
 public var swiftAsyncClosure4Var: (Int64, Int32, Int16, Double) async -> Double = { Double($0) + Double($1) + Double($2) + Double($3) }
 public var swiftAsyncClosure5Var: (Int64, Int32, Int16, Double, Float) async -> Double = { Double($0) + Double($1) + Double($2) + Double($3) + Double($4) }
 
-// TODO: setting async throws closures does not work
-//public var swiftAsyncClosure1ThrowsVar: (String) async throws -> Int = { s in s.count }
+public var swiftAsyncClosure1ThrowsVar: (String) async throws -> Int = { s in s.count }
 
 // MARK: Containers
 
