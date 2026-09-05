@@ -830,6 +830,46 @@ public func testSupport_kotlinClosure1OptionalsVar(value: String?) -> Int? {
     return i1 == i2 ? i1 : (i1 ?? 0) * 10000 + (i2 ?? 0)
 }
 
+public func testSupport_kotlinAsyncClosure0Var() async {
+    await kotlinAsyncClosure0Var()
+    kotlinAsyncClosure0Var = { try! await Task.sleep(nanoseconds: 1000000); print("reassigned") }
+    await kotlinAsyncClosure0Var()
+}
+
+public func testSupport_kotlinAsyncClosure0ProtocolVar() async -> String {
+    let first = await kotlinAsyncClosure0ProtocolVar().stringValue()
+
+    kotlinAsyncClosure0ProtocolVar = {
+        let helper = KotlinHelperClass()
+        helper.stringVar = "updated"
+        return helper
+    }
+
+    let second = await kotlinAsyncClosure0ProtocolVar().stringValue()
+    return "\(first)/\(second)"
+}
+
+public func testSupport_kotlinAsyncClosure1Var(value: Int) async -> String {
+    let s1 = await kotlinAsyncClosure1Var(value)
+    kotlinAsyncClosure1Var = { i in "value = \(i)" }
+    let s2 = await kotlinAsyncClosure1Var(value)
+    return s1 == s2 ? s1 : s1 + "/" + s2
+}
+
+public func testSupport_kotlinAsyncClosure1PrimitivesVar(value: Int64) async -> Int {
+    let i1 = await kotlinAsyncClosure1PrimitivesVar(value)
+    kotlinAsyncClosure1PrimitivesVar = { l in Int(l / 1000) }
+    let i2 = await kotlinAsyncClosure1PrimitivesVar(value)
+    return i1 == i2 ? i1 : i1 * 10000 + i2
+}
+
+public func testSupport_kotlinAsyncClosure1OptionalsVar(value: String?) async -> Int? {
+    let i1 = await kotlinAsyncClosure1OptionalsVar(value)
+    kotlinAsyncClosure1OptionalsVar = { s in s?.count }
+    let i2 = await kotlinAsyncClosure1OptionalsVar(value)
+    return i1 == i2 ? i1 : (i1 ?? 0) * 10000 + (i2 ?? 0)
+}
+
 public func testSupport_kotlinClosure1Parameter(value: (Int) -> String) {
     // We're only testing that using a closure as a parameter compiles cleanly
 }

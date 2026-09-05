@@ -381,6 +381,18 @@ public var kotlinClosure1Var: (Int) -> String = { i in "value = \(i)" }
 public var kotlinClosure1PrimitivesVar: (Int64) -> Int = { l in Int(l / 1000) }
 public var kotlinClosure1OptionalsVar: (String?) -> Int? = { s in s?.count }
 
+// MARK: Async Closures
+
+public var kotlinAsyncClosure0Var: () async -> Void = { print("original") }
+public var kotlinAsyncClosure0ProtocolVar: () async -> any KotlinProtocol = { KotlinHelperClass() }
+public var kotlinAsyncClosure1Var: (Int) async -> String = { i in "value = \(i)" }
+public var kotlinAsyncClosure1PrimitivesVar: (Int64) async -> Int = { l in Int(l / 1000) }
+public var kotlinAsyncClosure1OptionalsVar: (String?) async -> Int? = { s in s?.count }
+public var kotlinAsyncClosure2Var: (Int64, Int32) async -> Double = { Double($0) + Double($1) }
+public var kotlinAsyncClosure3Var: (Int64, Int32, Int16) async -> Double = { Double($0) + Double($1) + Double($2) }
+public var kotlinAsyncClosure4Var: (Int64, Int32, Int16, Double) async -> Double = { Double($0) + Double($1) + Double($2) + Double($3) }
+public var kotlinAsyncClosure5Var: (Int64, Int32, Int16, Double, Float) async -> Double = { Double($0) + Double($1) + Double($2) + Double($3) + Double($4) }
+
 // MARK: Containers
 
 public var kotlinIntArrayVar = [1, 2, 3]

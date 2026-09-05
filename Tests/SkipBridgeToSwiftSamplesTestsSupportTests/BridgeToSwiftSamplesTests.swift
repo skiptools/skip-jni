@@ -304,6 +304,32 @@ final class BridgeToSwiftTests: XCTestCase {
         XCTAssertEqual(testSupport_kotlinClosure1OptionalsVar(value: nil), nil)
     }
 
+    func testAsyncClosure0Var() async {
+        await testSupport_kotlinAsyncClosure0Var()
+    }
+
+    func testAsyncClosure0ProtocolVar() async {
+        let result = await testSupport_kotlinAsyncClosure0ProtocolVar()
+        XCTAssertEqual(result, "s/updated")
+    }
+
+    func testAsyncClosure1Var() async {
+        let result = await testSupport_kotlinAsyncClosure1Var(value: 100)
+        XCTAssertEqual(result, "value = 100")
+    }
+
+    func testAsyncClosure1PrimitivesVar() async {
+        let result = await testSupport_kotlinAsyncClosure1PrimitivesVar(value: Int64(3000))
+        XCTAssertEqual(result, 3)
+    }
+
+    func testAsyncClosure1OptionalsVar() async {
+        let result1 = await testSupport_kotlinAsyncClosure1OptionalsVar(value: "abc")
+        XCTAssertEqual(result1, 3)
+        let result2 = await testSupport_kotlinAsyncClosure1OptionalsVar(value: nil)
+        XCTAssertEqual(result2, nil)
+    }
+
     func testArrays() {
         let roundtripped = testSupport_kotlinIntArrayVar(value: [4, 5, 6])
         XCTAssertEqual(roundtripped, [4, 5, 6])
